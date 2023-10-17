@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube AdBlock blocker blocker
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      1.0
 // @description  Block those annoying "Ad blockers are not allowed on YouTube" popups.
 // @author       Sheezy-Systems
 // @match        https://www.youtube.com/*
@@ -15,9 +15,13 @@
     var observer = new MutationObserver(function(mutationsList) {
         mutationsList.forEach(function(mutation) {
             if (mutation.type === 'childList') {
-                if (document.querySelector('tp-yt-paper-dialog') && document.getElementById('dismiss-button')) {
+                let popups = document.getElementsByTagName("tp-yt-paper-dialog");
+                if (popups.length == 1) {
                     cLog("Found popup!");
-                    document.getElementById('dismiss-button').click();
+                    popups.item(0).delete()
+                    try {
+                    document.getElementsByTagName("tp-yt-iron-overlay-backdrop").delete();
+                    } catch {}
                     document.querySelector('.ytp-play-button.ytp-button').click();
                 }
             }
